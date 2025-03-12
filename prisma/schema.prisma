@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Incident {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  location    String?
+  date        DateTime
+  severity    String
+  status      String
+  department  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Training {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String
+  startDate   DateTime
+  endDate     DateTime
+  instructorId String
+  attendees   String
+  department  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RiskAssessment {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  department  String
+  assessorId  String
+  status      String
+  severity    Int
+  likelihood  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Audit {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  department  String
+  auditorId   String
+  status      String
+  findings    AuditFinding[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model AuditFinding {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  severity    String
+  status      String
+  audit       Audit    @relation(fields: [auditId], references: [id])
+  auditId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 
